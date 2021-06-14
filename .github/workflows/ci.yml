@@ -6,7 +6,8 @@ on:
       - master
 
 jobs:
-  build:
+  flutter_analyze:
+    name: Run Flutter Analyze and Flutter Format
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -19,11 +20,21 @@ jobs:
           channel: "stable"
 
       - run: flutter pub get
-      - run: flutter analyze .
-      - run: flutter test
-      - run: flutter build apk
+      - run: flutter analyze
+      - run: flutter format --dry-run --set-exit-if-changed lib/
 
-      - uses: actions/upload-artifact@v1
+  build_ios:
+    name: Build Flutter (iOS)
+    needs: [flutter_analyze]
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
         with:
-          name: release-apk
-          path: build/app/outputs/apk/release/app-release.apk
+          java-version: "12.x"
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: "stable"
+      - run: flutter pub get
+      - run: flutter clean
+      - run: flutter build ios --release --no-codesign
