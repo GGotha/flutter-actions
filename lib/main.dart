@@ -22,8 +22,12 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(
-        title: 'Title',
+      // home: MyHomePage(
+      //   title: 'Title',
+      // ),
+      home: FlatButton(
+        onPressed: () {},
+        child: Text('teste'),
       ),
     );
   }
